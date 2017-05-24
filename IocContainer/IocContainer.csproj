@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IocContainer</RootNamespace>
     <AssemblyName>IocContainer</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,11 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaconInjector.cs" />
+    <Compile Include="Containers\BaconInjector.cs" />
+    <Compile Include="Containers\ILifecycleIocContainer.cs" />
+    <Compile Include="Containers\SingletonIocContainer.cs" />
+    <Compile Include="Containers\TransientIocContainer.cs" />
     <Compile Include="Exceptions\TypeNotRegisteredException.cs" />
     <Compile Include="Exceptions\IncorrectGenericTypeException.cs" />
-    <Compile Include="IIocContainer.cs" />
-    <Compile Include="LifeCycle.cs" />
+    <Compile Include="Containers\IIocContainer.cs" />
+    <Compile Include="Containers\LifeCycle.cs" />
+    <Compile Include="Factories\IocContainerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

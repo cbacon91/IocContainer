@@ -9,7 +9,7 @@ namespace IocContainer.Containers
 {
     class SingletonIocContainer : IocContainerBase
     {
-        private static Dictionary<Type, IoCResolutionModel> _singletons = new Dictionary<Type, IoCResolutionModel>();
+        private Dictionary<Type, IoCResolutionModel> _singletons = new Dictionary<Type, IoCResolutionModel>();
 
         public override bool CanResolve(Type t) => _singletons.ContainsKey(t);
 
@@ -30,9 +30,12 @@ namespace IocContainer.Containers
                 return null;
 
             var resolvedValue = _singletons[interfaceType];
-            object resolved = null;
-            if (resolvedValue.ResolvedObject == null)
+            object resolved = resolvedValue.ResolvedObject ;
+            if (resolved == null)
+            {
                 resolved = Instantiate(resolvedValue.ResolveType);
+                _singletons[interfaceType] = new IoCResolutionModel(interfaceType) { ResolvedObject = resolved, Lifecycle = Lifecycle.Singleton };
+            }
 
             return resolved;
         }

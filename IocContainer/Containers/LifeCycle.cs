@@ -1,6 +1,6 @@
 ﻿namespace IocContainer.Containers
 {
-    public enum LifeCycle
+    public enum Lifecycle
     {
         Transient = 0,
         Singleton = 1

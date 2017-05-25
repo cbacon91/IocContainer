@@ -10,7 +10,7 @@ namespace IocContainer.Containers
     {
         public Type ResolveType { get; set; }
         public object ResolvedObject { get; set; }
-        public LifeCycle Lifecycle { get; set; }
+        public Lifecycle Lifecycle { get; set; }
 
         public IoCResolutionModel(Type resolveType)
         {

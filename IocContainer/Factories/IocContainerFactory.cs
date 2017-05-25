@@ -9,13 +9,13 @@ namespace IocContainer.Factories
 {
     class IocContainerFactory
     {
-        public static IIocContainer Create(LifeCycle lifeCycle)
+        public static IIocContainer Create(Lifecycle lifeCycle)
         {
             switch(lifeCycle)
             {
-                case LifeCycle.Singleton:
+                case Lifecycle.Singleton:
                     return new SingletonIocContainer();
-                case LifeCycle.Transient:
+                case Lifecycle.Transient:
                     return new TransientIocContainer();
                 default:
                     throw new NotImplementedException($"{lifeCycle.ToString()} IoCContainer Lifecycle not implemented.");

@@ -2,7 +2,7 @@
 {
     public interface ILifecycleIocContainer : IIocContainer
     {
-        void Register<TInterface, TImplementation>(LifeCycle lifecycle)
+        void Register<TInterface, TImplementation>(Lifecycle lifecycle)
             where TImplementation : class, TInterface; //Can't force TInterface to actually be an interface here; needs to be in the implementation
     }
 }

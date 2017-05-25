@@ -15,12 +15,13 @@ namespace IocContainer.Containers
         {
         }
 
-        private Dictionary<LifeCycle, IIocContainer> _iocContainers = new Dictionary<LifeCycle, IIocContainer>();
+        private Dictionary<Lifecycle, IIocContainer> _iocContainers = new Dictionary<Lifecycle, IIocContainer>();
+        public List<Type> TypesRegistered { get; private set; } = new List<Type>();
 
         public void Register<TInterface, TImplementation>() where TImplementation : class, TInterface =>
-            Register<TInterface, TImplementation>(LifeCycle.Transient);
+            Register<TInterface, TImplementation>(Lifecycle.Transient);
 
-        public void Register<TInterface, TImplementation>(LifeCycle lifecycle) where TImplementation : class, TInterface
+        public void Register<TInterface, TImplementation>(Lifecycle lifecycle) where TImplementation : class, TInterface
         {
             AssertTypeIsInterface(typeof(TInterface));
 
@@ -28,6 +29,7 @@ namespace IocContainer.Containers
                 _iocContainers.Add(lifecycle, IocContainerFactory.Create(lifecycle));
 
             _iocContainers[lifecycle].Register<TInterface, TImplementation>();
+            TypesRegistered.Add(typeof(TInterface));
         }
 
         public TInterface Resolve<TInterface>()

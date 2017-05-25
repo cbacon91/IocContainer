@@ -4,9 +4,11 @@ namespace IocContainer.Containers
 {
     public interface IIocContainer
     {
+        void Register<TTarget>(); //Registers a type to enable DI
+
         void Register<TInterface, TImplementation>()
             where TImplementation : class, TInterface; //Can't force TInterface to actually be an interface here; needs to be in the implementation
-        TInterface Resolve<TInterface>();
+        TTarget Resolve<TTarget>();
         bool CanResolve(Type target);
     }
 }

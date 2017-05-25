@@ -8,7 +8,7 @@ namespace IocContainer.Exceptions
 {
     public class TypeNotRegisteredException : Exception
     {
-        public TypeNotRegisteredException(Type interfaceType) : base($"The interface '{interfaceType.Name}' has not been registered and cannot be resolved.")
+        public TypeNotRegisteredException(Type targetType) : base($"The interface '{targetType.Name}' has not been registered and cannot be resolved.")
         {
         }
     }

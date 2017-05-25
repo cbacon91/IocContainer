@@ -18,6 +18,20 @@ namespace IocContainer.Containers
         private Dictionary<Lifecycle, IIocContainer> _iocContainers = new Dictionary<Lifecycle, IIocContainer>();
         public List<Type> TypesRegistered { get; private set; } = new List<Type>();
 
+
+        public void Register<TTarget>() => 
+            Register<TTarget>(Lifecycle.Transient);
+
+        public void Register<TTarget>(Lifecycle lifecycle)
+        {
+            if (!_iocContainers.ContainsKey(lifecycle))
+                _iocContainers.Add(lifecycle, IocContainerFactory.Create(lifecycle));
+
+            _iocContainers[lifecycle].Register<TTarget>();
+            TypesRegistered.Add(typeof(TTarget));
+
+        }
+
         public void Register<TInterface, TImplementation>() where TImplementation : class, TInterface =>
             Register<TInterface, TImplementation>(Lifecycle.Transient);
 
@@ -32,20 +46,18 @@ namespace IocContainer.Containers
             TypesRegistered.Add(typeof(TInterface));
         }
 
-        public TInterface Resolve<TInterface>()
+        public TTarget Resolve<TTarget>()
         {
-            AssertTypeIsInterface(typeof(TInterface));
-
             //because we don't necessarily know the lifecycle of the item being resolved, we have to check each of the iocContainers available.
             //fortunately, it's unlikely that we will ever have more than 3-5 types of IocContainers, and each subsequent Resolve is a constant-time operation.
             foreach (var container in _iocContainers)
             {
-                var resolved = container.Value.Resolve<TInterface>();
+                var resolved = container.Value.Resolve<TTarget>();
                 if (resolved != null)
                     return resolved;
             }
 
-            throw new TypeNotRegisteredException(typeof(TInterface));
+            throw new TypeNotRegisteredException(typeof(TTarget));
         }
 
         public bool CanResolve(Type target)
@@ -63,7 +75,5 @@ namespace IocContainer.Containers
             if (!inputType.IsInterface)
                 throw new IncorrectGenericTypeException("Supplied type was not an interface.");
         }
-
-
     }
 }

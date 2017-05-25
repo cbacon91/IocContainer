@@ -13,6 +13,14 @@ namespace IocContainer.Containers
 
         public override bool CanResolve(Type t) => _singletons.ContainsKey(t);
 
+        public override void Register<TTarget>()
+        {
+            if (_singletons.ContainsKey(typeof(TTarget)))
+                throw new TypeAlreadyRegisteredException(typeof(TTarget));
+
+            _singletons.Add(typeof(TTarget), new IoCResolutionModel(typeof(TTarget)));
+        }
+
         public override void Register<TInterface, TImplementation>()
         {
             if (_singletons.ContainsKey(typeof(TInterface)))
@@ -21,20 +29,20 @@ namespace IocContainer.Containers
             _singletons.Add(typeof(TInterface), new IoCResolutionModel(typeof(TImplementation))); 
         }
 
-        public override TInterface Resolve<TInterface>() => 
-            (TInterface)Resolve(typeof(TInterface));
+        public override TTarget Resolve<TTarget>() => 
+            (TTarget)Resolve(typeof(TTarget));
 
-        protected override object Resolve(Type interfaceType)
+        protected override object Resolve(Type targetType)
         {
-            if (!_singletons.ContainsKey(interfaceType))
+            if (!_singletons.ContainsKey(targetType))
                 return null;
 
-            var resolvedValue = _singletons[interfaceType];
+            var resolvedValue = _singletons[targetType];
             object resolved = resolvedValue.ResolvedObject ;
             if (resolved == null)
             {
                 resolved = Instantiate(resolvedValue.ResolveType);
-                _singletons[interfaceType] = new IoCResolutionModel(interfaceType) { ResolvedObject = resolved, Lifecycle = Lifecycle.Singleton };
+                _singletons[targetType] = new IoCResolutionModel(targetType) { ResolvedObject = resolved, Lifecycle = Lifecycle.Singleton };
             }
 
             return resolved;

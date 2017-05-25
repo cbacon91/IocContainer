@@ -13,12 +13,17 @@ namespace IocContainer.Containers
             throw new NotImplementedException();
         }
 
+        public void Register<TTarget>()
+        {
+            throw new NotImplementedException();
+        }
+        
         public void Register<TInterface, TImplementation>() where TImplementation : class, TInterface
         {
             throw new NotImplementedException();
         }
 
-        public TInterface Resolve<TInterface>()
+        public TTarget Resolve<TTarget>()
         {
             throw new NotImplementedException();
         }

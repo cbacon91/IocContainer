@@ -10,11 +10,11 @@ namespace IocContainer.Containers
 {
     abstract class IocContainerBase : IIocContainer
     {
-
+        public abstract void Register<TTarget>();
         public abstract void Register<TInterface, TImplementation>() where TImplementation : class, TInterface;
         public abstract TInterface Resolve<TInterface>();
-        protected abstract object Resolve(Type interfaceType);
-        public abstract bool CanResolve(Type t);
+        protected abstract object Resolve(Type targetType);
+        public abstract bool CanResolve(Type targetType);
 
         protected object Instantiate(Type objectType)
         {
@@ -27,7 +27,7 @@ namespace IocContainer.Containers
                 .GetConstructors()
                 .Where(c => c.IsPublic //probably only want to do this for public ctors
                     && c.GetParameters()
-                        .All(p => CanResolve(p.GetType())) //also only care about ctors we can actually resolve the params
+                        .All(p => CanResolve(p.ParameterType)) //also only care about ctors we can actually resolve the params
                 );
 
             if (!ctors.Any())
@@ -39,7 +39,10 @@ namespace IocContainer.Containers
             {
                 var count = ctor.GetParameters().Length;
                 if (count > maxParams)
+                {
                     victor = ctor;
+                    maxParams = count;
+                }
             }
 
             return victor

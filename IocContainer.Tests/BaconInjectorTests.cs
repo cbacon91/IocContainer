@@ -72,6 +72,47 @@ namespace IocContainer.Tests
             Assert.IsType(typeof(Model), model); //Because this is the generic resolve, all we can verify is the type. Singleton and Transient specific tests will follow as Facts
         }
 
+
+        [Theory]
+        [InlineData(Lifecycle.Transient)]
+        [InlineData(Lifecycle.Singleton)]
+        public void Resolve_ResolveConcrete(Lifecycle lifecycle)
+        {
+            var injector = new BaconInjector();
+            injector.Register<Model>(lifecycle);
+            var model = injector.Resolve<Model>();
+            Assert.IsType(typeof(Model), model);
+        }
+
+        [Theory]
+        [InlineData(Lifecycle.Transient)]
+        [InlineData(Lifecycle.Singleton)]
+        public void Resolve_UsesComplexConstructor_Concrete(Lifecycle lifecycle)
+        {
+            var injector = new BaconInjector();
+            injector.Register<IModel, Model>(lifecycle);
+            injector.Register<IParamModel, ParamModel>(lifecycle);
+            injector.Register<ComplexModel>(lifecycle);
+
+            var complexModel = injector.Resolve<ComplexModel>();
+            Assert.NotNull(complexModel.Model); //if it's not null, it was assigned
+            Assert.NotNull(complexModel.ParamModel); //if it's not null, it was assigned - used the correct ctor
+        }
+
+
+        [Theory]
+        [InlineData(Lifecycle.Transient)]
+        [InlineData(Lifecycle.Singleton)]
+        public void Resolve_ThrowsWhenNoValidCtor(Lifecycle lifecycle)
+        {
+            Assert.Throws(typeof(NoValidConstructorException), () =>
+            {
+                var injector = new BaconInjector();
+                injector.Register<ComplexModel>(lifecycle);
+                var complexModel = injector.Resolve<ComplexModel>();
+            });
+        }
+
         [Fact]
         public void Singleton_Resolve_ResolvesSameEachTime()
         {
@@ -88,7 +129,7 @@ namespace IocContainer.Tests
         public void Transient_Resolve_ResolvesDifferentEachTime()
         {
             var injector = new BaconInjector();
-            injector.Register<IModel, Model>(Lifecycle.Singleton);
+            injector.Register<IModel, Model>(Lifecycle.Transient);
             var expected = 256;
             var model = injector.Resolve<IModel>();
             model.SetId(expected);

@@ -1,0 +1,14 @@
+﻿@model Tuple<int, double>
+
+@{
+    ViewBag.Title = "Multiple Dependencies";
+}
+
+<div class="jumbotron">
+    <p>
+        This page was served by a controller with two distinct dependencies.
+    </p>
+    <p>
+        Welcome, User @(Model.Item1). The IRS has calculated that your taxes for the day are @(Model.Item2).
+    </p>
+</div>

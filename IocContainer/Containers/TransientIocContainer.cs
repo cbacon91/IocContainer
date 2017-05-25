@@ -8,7 +8,12 @@ namespace IocContainer.Containers
 {
     class TransientIocContainer : IIocContainer
     {
-        public void Register<TInterface, TImplementation>() where TImplementation : TInterface
+        public bool CanResolve(Type target)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Register<TInterface, TImplementation>() where TImplementation : class, TInterface
         {
             throw new NotImplementedException();
         }

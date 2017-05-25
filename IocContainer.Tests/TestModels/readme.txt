@@ -1,0 +1,1 @@
+﻿Because this library is all about the interactions between interfaces and concrete types, it seemed like a better idea to set up some dummy models rather than write tests on existing classes, which could have potentially muddled test data. The models contained here are minimally-scoped out to keep the test data valid.

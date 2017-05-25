@@ -18,7 +18,7 @@ namespace IocContainer.Factories
                 case LifeCycle.Transient:
                     return new TransientIocContainer();
                 default:
-                    throw new NotImplementedException($"{lifeCycle.ToString()} not implemented.");
+                    throw new NotImplementedException($"{lifeCycle.ToString()} IoCContainer Lifecycle not implemented.");
             }
         }
     }

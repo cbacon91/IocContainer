@@ -43,8 +43,12 @@
   <ItemGroup>
     <Compile Include="Containers\BaconInjector.cs" />
     <Compile Include="Containers\ILifecycleIocContainer.cs" />
+    <Compile Include="Containers\IocContainerBase.cs" />
     <Compile Include="Containers\SingletonIocContainer.cs" />
+    <Compile Include="Containers\IoCResolutionModel.cs" />
     <Compile Include="Containers\TransientIocContainer.cs" />
+    <Compile Include="Exceptions\NoValidConstructorException.cs" />
+    <Compile Include="Exceptions\TypeAlreadyRegisteredException.cs" />
     <Compile Include="Exceptions\TypeNotRegisteredException.cs" />
     <Compile Include="Exceptions\IncorrectGenericTypeException.cs" />
     <Compile Include="Containers\IIocContainer.cs" />

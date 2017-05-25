@@ -2,7 +2,7 @@
 {
     public enum LifeCycle
     {
-        Transient,
-        Singleton
+        Transient = 0,
+        Singleton = 1
     }
 }

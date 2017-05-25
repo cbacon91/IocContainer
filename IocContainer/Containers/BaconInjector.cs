@@ -11,25 +11,16 @@ namespace IocContainer.Containers
     public sealed class BaconInjector : ILifecycleIocContainer
     {
         //Private ctor to prevent instantiation..
-        private BaconInjector() { }
-
-        private static BaconInjector _instance;
-        public static BaconInjector Instance
+        public BaconInjector()
         {
-            get
-            {
-                if (_instance == null)
-                    _instance = new BaconInjector();
-
-                return _instance;
-            }
         }
 
         private Dictionary<LifeCycle, IIocContainer> _iocContainers = new Dictionary<LifeCycle, IIocContainer>();
 
-        public void Register<TInterface, TImplementation>() where TImplementation : TInterface => Register<TInterface, TImplementation>(LifeCycle.Transient);
+        public void Register<TInterface, TImplementation>() where TImplementation : class, TInterface =>
+            Register<TInterface, TImplementation>(LifeCycle.Transient);
 
-        public void Register<TInterface, TImplementation>(LifeCycle lifecycle) where TImplementation : TInterface
+        public void Register<TInterface, TImplementation>(LifeCycle lifecycle) where TImplementation : class, TInterface
         {
             AssertTypeIsInterface(typeof(TInterface));
 
@@ -41,17 +32,28 @@ namespace IocContainer.Containers
 
         public TInterface Resolve<TInterface>()
         {
-            //Check that TInterface is of type interface
-            //If not interface, throw exception
             AssertTypeIsInterface(typeof(TInterface));
 
-            //Determine if TInterface is Registered
-            //If not registered, throw new TypeNotRegisteredException
+            //because we don't necessarily know the lifecycle of the item being resolved, we have to check each of the iocContainers available.
+            //fortunately, it's unlikely that we will ever have more than 3-5 types of IocContainers, and each subsequent Resolve is a constant-time operation.
+            foreach (var container in _iocContainers)
+            {
+                var resolved = container.Value.Resolve<TInterface>();
+                if (resolved != null)
+                    return resolved;
+            }
 
-            //Find TInterface in cache / mapping / memory 
-            //return it
+            throw new TypeNotRegisteredException(typeof(TInterface));
+        }
 
-            throw new NotImplementedException();
+        public bool CanResolve(Type target)
+        {
+            foreach (var container in _iocContainers)
+            {
+                if (container.Value.CanResolve(target))
+                    return true;
+            }
+            return false;
         }
 
         private void AssertTypeIsInterface(Type inputType)
@@ -59,5 +61,7 @@ namespace IocContainer.Containers
             if (!inputType.IsInterface)
                 throw new IncorrectGenericTypeException("Supplied type was not an interface.");
         }
+
+
     }
 }

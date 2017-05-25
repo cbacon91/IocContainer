@@ -20,7 +20,7 @@ namespace IocContainer.Containers
         {
             //Business rules:
             // 1. The constructor must be public. We're using reflection, but we should respect the clients' encapsulation levels.
-            // 2. Only get constructors where we can actually resolve all of the references. If a constructor has even one parameter we can't resolve, we should ignore it. Passing in 'null' to a ctor is just poor design.
+            // 2. Only get constructors where we can actually resolve all of the references. If a constructor has even one parameter we can't resolve, we should ignore it. Passing in 'null' to a ctor is just poor design and can be dangerous for client use.
             // 3. Take the Autofac way of creating the object - find the constructor with the most parameters we can resolve.
             // 4. If there are no valid constructors meeting the above criteria, throw an exception. If nothing else, we should be provided a default or parameterless constructor.
             var ctors = objectType

@@ -73,7 +73,7 @@ namespace IocContainer.Containers
         private void AssertTypeIsInterface(Type inputType)
         {
             if (!inputType.IsInterface)
-                throw new IncorrectGenericTypeException("Supplied type was not an interface.");
+                throw new IncorrectGenericTypeException(GenericType.Interface);
         }
     }
 }

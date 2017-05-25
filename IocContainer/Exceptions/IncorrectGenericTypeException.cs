@@ -8,7 +8,7 @@ namespace IocContainer.Exceptions
 {
     public class IncorrectGenericTypeException : Exception
     {
-        public IncorrectGenericTypeException(string msg) : base(msg)
+        public IncorrectGenericTypeException(GenericType genericType) : base($"Generic type provided did not match expected generic type. Expected generic type: {genericType.ToString()}.")
         {
         }
     }

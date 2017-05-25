@@ -29,9 +29,6 @@ namespace IocContainer.Containers
             _singletons.Add(typeof(TInterface), new IoCResolutionModel(typeof(TImplementation))); 
         }
 
-        public override TTarget Resolve<TTarget>() => 
-            (TTarget)Resolve(typeof(TTarget));
-
         protected override object Resolve(Type targetType)
         {
             if (!_singletons.ContainsKey(targetType))

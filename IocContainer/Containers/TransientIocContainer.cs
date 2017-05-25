@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IocContainer.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,26 +7,35 @@ using System.Threading.Tasks;
 
 namespace IocContainer.Containers
 {
-    class TransientIocContainer : IIocContainer
+    class TransientIocContainer : IocContainerBase
     {
-        public bool CanResolve(Type target)
+        private Dictionary<Type, Type> _resolutionTypes = new Dictionary<Type, Type>();
+
+        public override bool CanResolve(Type targetType) => _resolutionTypes.ContainsKey(targetType);
+
+        public override void Register<TTarget>()
         {
-            throw new NotImplementedException();
+            if (_resolutionTypes.ContainsKey(typeof(TTarget)))
+                throw new TypeAlreadyRegisteredException(typeof(TTarget));
+
+            _resolutionTypes.Add(typeof(TTarget), typeof(TTarget));
         }
 
-        public void Register<TTarget>()
+        public override void Register<TInterface, TImplementation>()
         {
-            throw new NotImplementedException();
-        }
-        
-        public void Register<TInterface, TImplementation>() where TImplementation : class, TInterface
-        {
-            throw new NotImplementedException();
+            if (_resolutionTypes.ContainsKey(typeof(TInterface)))
+                throw new TypeAlreadyRegisteredException(typeof(TInterface));
+
+            _resolutionTypes.Add(typeof(TInterface), typeof(TImplementation));
         }
 
-        public TTarget Resolve<TTarget>()
+        protected override object Resolve(Type targetType)
         {
-            throw new NotImplementedException();
+            if (!_resolutionTypes.ContainsKey(targetType))
+                return null;
+
+            var resolvedValue = _resolutionTypes[targetType];
+            return Instantiate(resolvedValue);
         }
     }
 }

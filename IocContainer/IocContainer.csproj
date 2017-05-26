@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\CRICUT-LEGACYLIBRARY\NuGet\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
@@ -46,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Containers\BaconInjector.cs" />
+    <Compile Include="DependencyResolvers\BaconDependencyResolver.cs" />
     <Compile Include="Exceptions\GenericType.cs" />
     <Compile Include="Containers\ILifecycleIocContainer.cs" />
     <Compile Include="Containers\IocContainerBase.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Exceptions\IncorrectGenericTypeException.cs" />
     <Compile Include="Containers\IIocContainer.cs" />
     <Compile Include="Containers\LifeCycle.cs" />
+    <Compile Include="Factories\BaconInjectorControllerFactory.cs" />
     <Compile Include="Factories\IocContainerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

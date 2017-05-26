@@ -13,7 +13,7 @@ namespace IocContainer.Containers
         public abstract void Register<TTarget>();
         public abstract void Register<TInterface, TImplementation>() where TImplementation : class, TInterface;
         public TTarget Resolve<TTarget>() => (TTarget)Resolve(typeof(TTarget));
-        protected abstract object Resolve(Type targetType);
+        public abstract object Resolve(Type targetType);
         public abstract bool CanResolve(Type targetType);
 
         protected object Instantiate(Type objectType)

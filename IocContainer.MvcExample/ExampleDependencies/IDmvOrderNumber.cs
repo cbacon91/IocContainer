@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IocContainer.Tests.TestModels
+namespace IocContainer.MvcExample.ExampleDependencies
 {
-    interface IComplexModel
+    public interface IDmvOrderNumber
     {
-        IParamModel GetParamModel();
+        int GetTicketId();
     }
 }

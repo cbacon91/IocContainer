@@ -29,7 +29,7 @@ namespace IocContainer.Containers
             _resolutionTypes.Add(typeof(TInterface), typeof(TImplementation));
         }
 
-        protected override object Resolve(Type targetType)
+        public override object Resolve(Type targetType)
         {
             if (!_resolutionTypes.ContainsKey(targetType))
                 return null;

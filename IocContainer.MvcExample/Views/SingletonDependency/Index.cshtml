@@ -1,0 +1,14 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Singleton Dependency";
+}
+
+<div class="jumbotron">
+    <p>
+        This page was served by a controller with a single, non-complex dependency which was resolved as a singleton reference. For the lifetime of this application, the same dependency gets resolved.
+    </p>
+    <p>
+        The last number the DMV took was @(Model). This number will never change, because let's face it, it's the DMV.
+    </p>
+</div>

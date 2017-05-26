@@ -183,11 +183,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\NestedDependencyController.cs" />
+    <Compile Include="Controllers\SingletonDependencyController.cs" />
     <Compile Include="Controllers\SingleDependencyController.cs" />
     <Compile Include="Controllers\UnresolvedErrorController.cs" />
     <Compile Include="Controllers\MultipleDependencyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="ExampleDependencies\INestedDependency.cs" />
+    <Compile Include="ExampleDependencies\IDmvOrderNumber.cs" />
+    <Compile Include="ExampleDependencies\DmvOrderNumber.cs" />
     <Compile Include="ExampleDependencies\ITaxCalculator.cs" />
     <Compile Include="ExampleDependencies\IUserRepository.cs" />
     <Compile Include="ExampleDependencies\IUnresolvedDependency.cs" />
@@ -250,9 +253,10 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\SingleDependency\Index.cshtml" />
-    <Content Include="Views\MultpleDependency\Index.cshtml" />
+    <Content Include="Views\MultipleDependency\Index.cshtml" />
     <Content Include="Views\UnresolvedError\Index.cshtml" />
     <Content Include="Views\NestedDependency\Index.cshtml" />
+    <Content Include="Views\SingletonDependency\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

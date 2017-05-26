@@ -16,5 +16,7 @@ namespace IocContainer.Tests.TestModels
             ParamModel = paramModel;
             Model = model;
         }
+
+        public IParamModel GetParamModel() => ParamModel;
     }
 }

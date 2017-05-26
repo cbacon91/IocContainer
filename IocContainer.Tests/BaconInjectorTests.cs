@@ -136,5 +136,21 @@ namespace IocContainer.Tests
             var modelAgain = injector.Resolve<IModel>();
             Assert.NotEqual(expected, ((Model)modelAgain).Id);
         }
+
+        [Theory]
+        [InlineData(Lifecycle.Transient, Lifecycle.Singleton)]
+        [InlineData(Lifecycle.Singleton, Lifecycle.Transient)]
+        public void Resolve_CanResolveDifferentLifecycles(Lifecycle thisObject, Lifecycle referencesObject)
+        {
+            var injector = new BaconInjector();
+            injector.Register<IModel, Model>(referencesObject);
+            injector.Register<IParamModel, ParamModel>(referencesObject);
+            injector.Register<IComplexModel, ComplexModel>(thisObject);
+
+            var model = injector.Resolve<IComplexModel>();
+            Assert.NotNull(model);
+            Assert.NotNull(model.GetParamModel());
+        }
+
     }
 }

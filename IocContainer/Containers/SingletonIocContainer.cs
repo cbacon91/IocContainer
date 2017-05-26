@@ -29,7 +29,7 @@ namespace IocContainer.Containers
             _singletons.Add(typeof(TInterface), new IoCResolutionModel(typeof(TImplementation))); 
         }
 
-        protected override object Resolve(Type targetType)
+        public override object Resolve(Type targetType)
         {
             if (!_singletons.ContainsKey(targetType))
                 return null;

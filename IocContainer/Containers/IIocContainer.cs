@@ -9,6 +9,7 @@ namespace IocContainer.Containers
         void Register<TInterface, TImplementation>()
             where TImplementation : class, TInterface; //Can't force TInterface to actually be an interface here; needs to be in the implementation
         TTarget Resolve<TTarget>();
+        object Resolve(Type target);
         bool CanResolve(Type target);
     }
 }

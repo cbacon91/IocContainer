@@ -10,7 +10,6 @@ namespace IocContainer.Containers
 {
     public sealed class BaconInjector : ILifecycleIocContainer
     {
-        //Private ctor to prevent instantiation..
         public BaconInjector()
         {
         }
@@ -19,8 +18,7 @@ namespace IocContainer.Containers
         public List<Type> TypesRegistered { get; private set; } = new List<Type>();
 
 
-        public void Register<TTarget>() => 
-            Register<TTarget>(Lifecycle.Transient);
+        public void Register<TTarget>() => Register<TTarget>(Lifecycle.Transient);
 
         public void Register<TTarget>(Lifecycle lifecycle)
         {
@@ -37,7 +35,8 @@ namespace IocContainer.Containers
 
         public void Register<TInterface, TImplementation>(Lifecycle lifecycle) where TImplementation : class, TInterface
         {
-            AssertTypeIsInterface(typeof(TInterface));
+            if (!typeof(TInterface).IsInterface)
+                throw new IncorrectGenericTypeException(GenericType.Interface);
 
             if (!_iocContainers.ContainsKey(lifecycle))
                 _iocContainers.Add(lifecycle, IocContainerFactory.Create(lifecycle));
@@ -46,34 +45,17 @@ namespace IocContainer.Containers
             TypesRegistered.Add(typeof(TInterface));
         }
 
-        public TTarget Resolve<TTarget>()
+        public object Resolve(Type target)
         {
-            //because we don't necessarily know the lifecycle of the item being resolved, we have to check each of the iocContainers available.
-            //fortunately, it's unlikely that we will ever have more than 3-5 types of IocContainers, and each subsequent Resolve is a constant-time operation.
-            foreach (var container in _iocContainers)
-            {
-                var resolved = container.Value.Resolve<TTarget>();
-                if (resolved != null)
-                    return resolved;
-            }
+            IIocContainer resolver = _iocContainers.SingleOrDefault(c => c.Value.CanResolve(target)).Value;
+            if(resolver == null)
+                throw new TypeNotRegisteredException(target);
 
-            throw new TypeNotRegisteredException(typeof(TTarget));
+            return resolver.Resolve(target);
         }
 
-        public bool CanResolve(Type target)
-        {
-            foreach (var container in _iocContainers)
-            {
-                if (container.Value.CanResolve(target))
-                    return true;
-            }
-            return false;
-        }
+        public TTarget Resolve<TTarget>() => (TTarget)Resolve(typeof(TTarget));
 
-        private void AssertTypeIsInterface(Type inputType)
-        {
-            if (!inputType.IsInterface)
-                throw new IncorrectGenericTypeException(GenericType.Interface);
-        }
+        public bool CanResolve(Type target) => _iocContainers.Any(c => c.Value.CanResolve(target));
     }
 }

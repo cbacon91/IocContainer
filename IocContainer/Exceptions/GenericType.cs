@@ -3,7 +3,9 @@
     public enum GenericType
     {
         Interface = 0,
-        Class = 1,
-        Value = 2
+        Abstract = 1,
+        InterfaceOrAbstract = 2,
+        Class = 3,
+        Value = 4
     }
 }

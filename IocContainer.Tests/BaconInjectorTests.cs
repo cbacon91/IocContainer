@@ -19,7 +19,9 @@ namespace IocContainer.Tests
         [InlineData(Lifecycle.Singleton)]
         public void Register_ThrowsIncorrectGenericTypeException_ForConcreteGeneric(Lifecycle lifecycle)
         {
-            Assert.Throws(typeof(IncorrectGenericTypeException), () => new BaconInjector().Register<object, object>(lifecycle));
+            Assert.Throws(typeof(IncorrectGenericTypeException), () =>
+                new BaconInjector().Register<object, object>(lifecycle)
+            );
         }
 
         [Theory]
@@ -33,6 +35,39 @@ namespace IocContainer.Tests
                 injector.Register<IModel, Model>(lifecycle);
                 injector.Register<IModel, Model>(lifecycle);
             });
+        }
+
+        [Theory]
+        [InlineData(Lifecycle.Transient)]
+        [InlineData(Lifecycle.Singleton)]
+        public void Register_RejectsAbstractClassesAlone(Lifecycle lifecycle)
+        {
+            var injector = new BaconInjector();
+            Assert.Throws<IncorrectGenericTypeException>(() =>
+            {
+                injector.Register<AbstractModelBase>();
+            });
+        }
+
+
+        [Theory]
+        [InlineData(Lifecycle.Transient)]
+        [InlineData(Lifecycle.Singleton)]
+        public void Register_RejectsInterfacesAlone(Lifecycle lifecycle)
+        {
+            var injector = new BaconInjector();
+            Assert.Throws<IncorrectGenericTypeException>(() =>
+            {
+                injector.Register<IModel>();
+            });
+        }
+        [InlineData(Lifecycle.Transient)]
+        [InlineData(Lifecycle.Singleton)]
+        public void Register_RegistersAbstractClassesWithImplementations(Lifecycle lifecycle)
+        {
+            var injector = new BaconInjector();
+            injector.Register<AbstractModelBase, AbstractModelImplementation>();
+            Assert.Equal(new Type[] { typeof(AbstractModelBase) }, injector.TypesRegistered);
         }
 
         [Theory]

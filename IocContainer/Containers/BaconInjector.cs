@@ -18,6 +18,9 @@ namespace IocContainer.Containers
 
         public void Register<TTarget>(Lifecycle lifecycle) where TTarget : class
         {
+            if (typeof(TTarget).IsInterface || typeof(TTarget).IsAbstract)
+                throw new IncorrectGenericTypeException(GenericType.Class);
+
             if (!_lifecycleIocContainers.ContainsKey(lifecycle))
                 _lifecycleIocContainers.Add(lifecycle, IocContainerFactory.CreateLifecycleSpecificIocContainer(lifecycle));
 
@@ -30,7 +33,7 @@ namespace IocContainer.Containers
 
         public void Register<TInterface, TImplementation>(Lifecycle lifecycle) where TImplementation : class, TInterface
         {
-            if (!typeof(TInterface).IsInterface)
+            if (!typeof(TInterface).IsInterface && !typeof(TInterface).IsAbstract)
                 throw new IncorrectGenericTypeException(GenericType.Interface);
 
             if (!_lifecycleIocContainers.ContainsKey(lifecycle))

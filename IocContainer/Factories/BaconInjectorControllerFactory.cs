@@ -19,7 +19,9 @@ namespace IocContainer.Factories
 
         protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
         {
-            return _iocContainer.CanResolve(controllerType) ? (IController)_iocContainer.Resolve(controllerType) : base.GetControllerInstance(requestContext, controllerType);
+            return _iocContainer.CanResolve(controllerType) 
+                ? (IController)_iocContainer.Resolve(controllerType) 
+                : base.GetControllerInstance(requestContext, controllerType);
         }
     }
 }

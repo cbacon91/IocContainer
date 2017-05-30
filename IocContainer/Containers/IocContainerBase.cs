@@ -10,13 +10,13 @@ namespace IocContainer.Containers
 {
     abstract class IocContainerBase : IIocContainer
     {
-        public abstract void Register<TTarget>();
+        public abstract void Register<TTarget>() where TTarget : class;
         public abstract void Register<TInterface, TImplementation>() where TImplementation : class, TInterface;
         public TTarget Resolve<TTarget>() => (TTarget)Resolve(typeof(TTarget));
         public abstract object Resolve(Type targetType);
         public abstract bool CanResolve(Type targetType);
 
-        protected object Instantiate(Type objectType)
+        protected object Instantiate(Type objectType, Func<Type, bool> canResolveCallback, Func<Type, object> resolveCallback)
         {
             //Business rules:
             // 1. The constructor must be public. We're using reflection, but we should respect the clients' encapsulation levels.
@@ -27,7 +27,7 @@ namespace IocContainer.Containers
                 .GetConstructors()
                 .Where(c => c.IsPublic //probably only want to do this for public ctors
                     && c.GetParameters()
-                        .All(p => CanResolve(p.ParameterType)) //also only care about ctors we can actually resolve the params
+                        .All(p => canResolveCallback(p.ParameterType)) //also only care about ctors we can actually resolve the params
                 );
 
             if (!ctors.Any())
@@ -48,7 +48,7 @@ namespace IocContainer.Containers
             return victor
                 .Invoke(victor
                     .GetParameters()
-                    .Select(p => Resolve(p.ParameterType))
+                    .Select(p => resolveCallback(p.ParameterType))
                     .ToArray());
         }
     }

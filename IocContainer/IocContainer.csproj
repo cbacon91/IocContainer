@@ -47,9 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Containers\BaconInjector.cs" />
-    <Compile Include="DependencyResolvers\BaconDependencyResolver.cs" />
+    <Compile Include="Containers\ISelectableLifecycleIocContainer.cs" />
+    <Compile Include="Containers\ISpecificLifecycleContainer.cs" />
     <Compile Include="Exceptions\GenericType.cs" />
-    <Compile Include="Containers\ILifecycleIocContainer.cs" />
     <Compile Include="Containers\IocContainerBase.cs" />
     <Compile Include="Containers\SingletonIocContainer.cs" />
     <Compile Include="Containers\IoCResolutionModel.cs" />

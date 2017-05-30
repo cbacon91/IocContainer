@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IocContainer.Containers
 {
-    class TransientIocContainer : IocContainerBase
+    class TransientIocContainer : IocContainerBase, ISpecificLifecycleContainer
     {
         private Dictionary<Type, Type> _resolutionTypes = new Dictionary<Type, Type>();
 
@@ -29,13 +29,15 @@ namespace IocContainer.Containers
             _resolutionTypes.Add(typeof(TInterface), typeof(TImplementation));
         }
 
-        public override object Resolve(Type targetType)
+        public override object Resolve(Type targetType) => Resolve(targetType, CanResolve, Resolve);
+
+        public object Resolve(Type targetType, Func<Type, bool> otherLifecycleCanResolveCallback, Func<Type, object> otherLifecycleResolveCallback)
         {
             if (!_resolutionTypes.ContainsKey(targetType))
                 return null;
 
             var resolvedValue = _resolutionTypes[targetType];
-            return Instantiate(resolvedValue);
+            return Instantiate(resolvedValue, otherLifecycleCanResolveCallback, otherLifecycleResolveCallback);
         }
     }
 }

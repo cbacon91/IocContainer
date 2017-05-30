@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace IocContainer.Containers
 {
-    public class IoCResolutionModel
+    public class IocResolutionModel
     {
         public Type ResolveType { get; set; }
         public object ResolvedObject { get; set; }
         public Lifecycle Lifecycle { get; set; }
 
-        public IoCResolutionModel(Type resolveType)
+        public IocResolutionModel(Type resolveType)
         {
             ResolveType = resolveType;
         }

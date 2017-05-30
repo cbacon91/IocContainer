@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace IocContainer.Containers
 {
-    class SingletonIocContainer : IocContainerBase
+    class SingletonIocContainer : IocContainerBase, ISpecificLifecycleContainer
     {
-        private Dictionary<Type, IoCResolutionModel> _singletons = new Dictionary<Type, IoCResolutionModel>();
+        private Dictionary<Type, IocResolutionModel> _singletons = new Dictionary<Type, IocResolutionModel>();
 
         public override bool CanResolve(Type t) => _singletons.ContainsKey(t);
 
@@ -18,7 +18,7 @@ namespace IocContainer.Containers
             if (_singletons.ContainsKey(typeof(TTarget)))
                 throw new TypeAlreadyRegisteredException(typeof(TTarget));
 
-            _singletons.Add(typeof(TTarget), new IoCResolutionModel(typeof(TTarget)));
+            _singletons.Add(typeof(TTarget), new IocResolutionModel(typeof(TTarget)));
         }
 
         public override void Register<TInterface, TImplementation>()
@@ -26,20 +26,22 @@ namespace IocContainer.Containers
             if (_singletons.ContainsKey(typeof(TInterface)))
                 throw new TypeAlreadyRegisteredException(typeof(TInterface));
 
-            _singletons.Add(typeof(TInterface), new IoCResolutionModel(typeof(TImplementation))); 
+            _singletons.Add(typeof(TInterface), new IocResolutionModel(typeof(TImplementation)));
         }
 
-        public override object Resolve(Type targetType)
+        public override object Resolve(Type targetType) => Resolve(targetType, CanResolve, Resolve);
+
+        public object Resolve(Type targetType, Func<Type, bool> otherLifecycleCanResolveCallback, Func<Type, object> otherLifecycleResolveCallback)
         {
             if (!_singletons.ContainsKey(targetType))
                 return null;
 
             var resolvedValue = _singletons[targetType];
-            object resolved = resolvedValue.ResolvedObject ;
+            object resolved = resolvedValue.ResolvedObject;
             if (resolved == null)
             {
-                resolved = Instantiate(resolvedValue.ResolveType);
-                _singletons[targetType] = new IoCResolutionModel(targetType) { ResolvedObject = resolved, Lifecycle = Lifecycle.Singleton };
+                resolved = Instantiate(resolvedValue.ResolveType, otherLifecycleCanResolveCallback, otherLifecycleResolveCallback);
+                _singletons[targetType] = new IocResolutionModel(targetType) { ResolvedObject = resolved, Lifecycle = Lifecycle.Singleton };
             }
 
             return resolved;

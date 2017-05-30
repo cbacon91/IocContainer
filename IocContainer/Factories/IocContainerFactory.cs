@@ -9,17 +9,19 @@ namespace IocContainer.Factories
 {
     class IocContainerFactory
     {
-        public static IIocContainer Create(Lifecycle lifeCycle)
-        {
-            switch(lifeCycle)
+        readonly static Dictionary<Lifecycle, Func<ISpecificLifecycleContainer>> LifeCycleIocContainers =
+            new Dictionary<Lifecycle, Func<ISpecificLifecycleContainer>>
             {
-                case Lifecycle.Singleton:
-                    return new SingletonIocContainer();
-                case Lifecycle.Transient:
-                    return new TransientIocContainer();
-                default:
-                    throw new NotImplementedException($"{lifeCycle.ToString()} IoCContainer Lifecycle not implemented.");
-            }
+                [Lifecycle.Singleton] = () => new SingletonIocContainer(),
+                [Lifecycle.Transient] = () => new TransientIocContainer()
+            };
+
+        public static ISpecificLifecycleContainer CreateLifecycleSpecificIocContainer(Lifecycle lifecycle)
+        {
+            if (!LifeCycleIocContainers.ContainsKey(lifecycle))
+                throw new NotImplementedException($"{lifecycle.ToString()} IoCContainer Lifecycle not implemented.");
+
+            return LifeCycleIocContainers[lifecycle]();
         }
     }
 }

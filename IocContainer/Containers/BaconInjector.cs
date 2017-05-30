@@ -8,26 +8,21 @@ using System.Threading.Tasks;
 
 namespace IocContainer.Containers
 {
-    public sealed class BaconInjector : ILifecycleIocContainer
+    public sealed class BaconInjector : ISelectableLifecycleIocContainer
     {
-        public BaconInjector()
+        private Dictionary<Lifecycle, ISpecificLifecycleContainer> _lifecycleIocContainers = new Dictionary<Lifecycle, ISpecificLifecycleContainer>();
+
+        public readonly List<Type> TypesRegistered = new List<Type>();
+
+        public void Register<TTarget>() where TTarget : class => Register<TTarget>(Lifecycle.Transient);
+
+        public void Register<TTarget>(Lifecycle lifecycle) where TTarget : class
         {
-        }
+            if (!_lifecycleIocContainers.ContainsKey(lifecycle))
+                _lifecycleIocContainers.Add(lifecycle, IocContainerFactory.CreateLifecycleSpecificIocContainer(lifecycle));
 
-        private Dictionary<Lifecycle, IIocContainer> _iocContainers = new Dictionary<Lifecycle, IIocContainer>();
-        public List<Type> TypesRegistered { get; private set; } = new List<Type>();
-
-
-        public void Register<TTarget>() => Register<TTarget>(Lifecycle.Transient);
-
-        public void Register<TTarget>(Lifecycle lifecycle)
-        {
-            if (!_iocContainers.ContainsKey(lifecycle))
-                _iocContainers.Add(lifecycle, IocContainerFactory.Create(lifecycle));
-
-            _iocContainers[lifecycle].Register<TTarget>();
+            _lifecycleIocContainers[lifecycle].Register<TTarget>();
             TypesRegistered.Add(typeof(TTarget));
-
         }
 
         public void Register<TInterface, TImplementation>() where TImplementation : class, TInterface =>
@@ -38,24 +33,24 @@ namespace IocContainer.Containers
             if (!typeof(TInterface).IsInterface)
                 throw new IncorrectGenericTypeException(GenericType.Interface);
 
-            if (!_iocContainers.ContainsKey(lifecycle))
-                _iocContainers.Add(lifecycle, IocContainerFactory.Create(lifecycle));
+            if (!_lifecycleIocContainers.ContainsKey(lifecycle))
+                _lifecycleIocContainers.Add(lifecycle, IocContainerFactory.CreateLifecycleSpecificIocContainer(lifecycle));
 
-            _iocContainers[lifecycle].Register<TInterface, TImplementation>();
+            _lifecycleIocContainers[lifecycle].Register<TInterface, TImplementation>();
             TypesRegistered.Add(typeof(TInterface));
         }
 
         public object Resolve(Type target)
         {
-            IIocContainer resolver = _iocContainers.SingleOrDefault(c => c.Value.CanResolve(target)).Value;
+            ISpecificLifecycleContainer resolver = _lifecycleIocContainers.SingleOrDefault(c => c.Value.CanResolve(target)).Value;
             if(resolver == null)
                 throw new TypeNotRegisteredException(target);
 
-            return resolver.Resolve(target);
+            return resolver.Resolve(target, CanResolve, Resolve);
         }
 
         public TTarget Resolve<TTarget>() => (TTarget)Resolve(typeof(TTarget));
 
-        public bool CanResolve(Type target) => _iocContainers.Any(c => c.Value.CanResolve(target));
+        public bool CanResolve(Type target) => _lifecycleIocContainers.Any(c => c.Value.CanResolve(target));
     }
 }

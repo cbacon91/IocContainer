@@ -1,5 +1,4 @@
 ﻿using IocContainer.Containers;
-using IocContainer.DependencyResolvers;
 using IocContainer.Factories;
 using IocContainer.MvcExample.Controllers;
 using IocContainer.MvcExample.ExampleDependencies;
@@ -15,7 +14,7 @@ namespace IocContainer.MvcExample
         public void Configuration(IAppBuilder app)
         {
 
-            ILifecycleIocContainer iocContainer = new BaconInjector();
+            ISelectableLifecycleIocContainer iocContainer = new BaconInjector();
 
             iocContainer.Register<ITaxCalculator, TaxCalculator>(); //If lifecycle is not supplied, 'Transient' is used.
             iocContainer.Register<IUserRepository, UserRepository>();

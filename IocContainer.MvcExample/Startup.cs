@@ -24,7 +24,7 @@ namespace IocContainer.MvcExample
             iocContainer.Register<SingleDependencyController>();
             iocContainer.Register<MultipleDependencyController>();
             iocContainer.Register<NestedDependencyController>();
-            iocContainer.Register<SingletonDependencyController>(Lifecycle.Singleton);
+            iocContainer.Register<SingletonDependencyController>();
             iocContainer.Register<UnresolvedErrorController>(); //did not resolve the dependency used for UnresolvedDependency
 
             IControllerFactory factory = new BaconInjectorControllerFactory(iocContainer);

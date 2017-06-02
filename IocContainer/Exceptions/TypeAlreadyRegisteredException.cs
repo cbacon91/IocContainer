@@ -8,7 +8,7 @@ namespace IocContainer.Exceptions
 {
     public class TypeAlreadyRegisteredException : Exception
     {
-        public TypeAlreadyRegisteredException(Type targetType) : base($"The interface '{targetType.Name}' has already been registered and cannot be registered again.")
+        public TypeAlreadyRegisteredException(Type targetType) : base($"The type '{targetType.Name}' has already been registered and cannot be registered again.")
         {
         }
     }

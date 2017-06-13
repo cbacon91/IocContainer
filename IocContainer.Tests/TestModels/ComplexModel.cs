@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IocContainer.Tests.TestModels
+﻿namespace IocContainer.Tests.TestModels
 {
-    class ComplexModel : IComplexModel
+  class ComplexModel : IComplexModel
+  {
+    public IModel Model { get; set; }
+    public IParamModel ParamModel { get; set; }
+
+    public ComplexModel(IModel model, IParamModel paramModel)
     {
-        public IModel Model { get; set; }
-        public IParamModel ParamModel { get; set; }
-
-        public ComplexModel(IModel model, IParamModel paramModel)
-        {
-            ParamModel = paramModel;
-            Model = model;
-        }
-
-        public IParamModel GetParamModel() => ParamModel;
+      ParamModel = paramModel;
+      Model = model;
     }
+
+    public IParamModel GetParamModel() => ParamModel;
+  }
 }

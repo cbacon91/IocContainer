@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IocContainer.Tests.TestModels
+﻿namespace IocContainer.Tests.TestModels
 {
-    class AbstractModelImplementation : AbstractModelBase
-    {
-    }
+  class AbstractModelImplementation : AbstractModelBase
+  {
+  }
 }

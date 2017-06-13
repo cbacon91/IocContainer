@@ -9,26 +9,26 @@ using System.Web.Mvc;
 [assembly: OwinStartupAttribute(typeof(IocContainer.MvcExample.Startup))]
 namespace IocContainer.MvcExample
 {
-    public partial class Startup
+  public partial class Startup
+  {
+    public void Configuration(IAppBuilder app)
     {
-        public void Configuration(IAppBuilder app)
-        {
 
-            ISelectableLifecycleIocContainer iocContainer = new BaconInjector();
+      ISelectableLifecycleIocContainer iocContainer = new BaconInjector();
 
-            iocContainer.Register<ITaxCalculator, TaxCalculator>(); //If lifecycle is not supplied, 'Transient' is used.
-            iocContainer.Register<IUserRepository, UserRepository>();
-            iocContainer.Register<INestedDependency, NestedDependency>();
-            iocContainer.Register<IDmvOrderNumber, DmvOrderNumber>(Lifecycle.Singleton);
+      iocContainer.Register<ITaxCalculator, TaxCalculator>(); //If lifecycle is not supplied, 'Transient' is used.
+      iocContainer.Register<IUserRepository, UserRepository>();
+      iocContainer.Register<INestedDependency, NestedDependency>();
+      iocContainer.Register<IDmvOrderNumber, DmvOrderNumber>(Lifecycle.Singleton);
 
-            iocContainer.Register<SingleDependencyController>();
-            iocContainer.Register<MultipleDependencyController>();
-            iocContainer.Register<NestedDependencyController>();
-            iocContainer.Register<SingletonDependencyController>();
-            iocContainer.Register<UnresolvedErrorController>(); //did not resolve the dependency used for UnresolvedDependency
+      iocContainer.Register<SingleDependencyController>();
+      iocContainer.Register<MultipleDependencyController>();
+      iocContainer.Register<NestedDependencyController>();
+      iocContainer.Register<SingletonDependencyController>();
+      iocContainer.Register<UnresolvedErrorController>(); //did not resolve the dependency used for UnresolvedDependency
 
-            IControllerFactory factory = new BaconInjectorControllerFactory(iocContainer);
-            ControllerBuilder.Current.SetControllerFactory(factory);
-        }
+      IControllerFactory factory = new BaconInjectorControllerFactory(iocContainer);
+      ControllerBuilder.Current.SetControllerFactory(factory);
     }
+  }
 }
